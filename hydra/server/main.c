@@ -6,7 +6,7 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 20:45:55 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/01 22:00:30 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/01 22:41:52 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ int		main(int ac, char *av[])
 		while ((nread = recv(n_sock, buf, BUFF_SIZE, 0)) > 0)
 		{
 			buf[nread] = '\0';
-			if (strncmp(buf, KEY_WORD,4) == 0)
+			if (strncmp(buf, KEY_WORD, 4) == 0)
 				write(n_sock, PONG_PONG, 9);
 			else
-				write(n_sock, buf, nread);
+				write(n_sock, "\0", 1);
 		}
 		close(n_sock);
 	}
