@@ -3,7 +3,8 @@ Hydra:
 		✔ investigate @done (3/1/2018, 10:04:58 PM)
 		✔ code server on host machine @done (3/1/2018, 10:05:01 PM)
 		☐ integrate on debian
-		☐ norminette
+		☐ daemonize
 	Client:
 		✔ investigate @done (3/1/2018, 10:05:04 PM)
-		☐ refactor the client
+		✔ refactor the client @done (3/1/2018, 10:41:20 PM)
+	☐ norminette
