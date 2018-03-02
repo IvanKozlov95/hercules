@@ -20,11 +20,12 @@ void	die(char *msg)
 
 int		main(int ac, char *av[])
 {
-	int		c_sock;
 	struct sockaddr_in	addr;
-	socklen_t	len;
+	socklen_t			len;
+	int					n_sock;
+	int					c_sock;
+	int					nread;
 	char				buf[BUFF_SIZE + 1];
-	int		n_sock;
 
 	c_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (c_sock == -1)
