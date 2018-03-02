@@ -6,7 +6,7 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 09:59:00 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/01 20:21:00 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/01 21:56:12 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 #include <pthread.h>
 
 # define PORT "1234"
+# define PONG_PONG "pong pong"
+# define KEY_WORD "ping"
 # define MAX_CONNECTION (100)
 # define BUFF_SIZE (1024)
 
