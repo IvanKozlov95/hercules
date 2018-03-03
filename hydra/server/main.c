@@ -18,8 +18,26 @@ void	die(char *msg)
 	exit(1);
 }
 
-int		main(int ac, char *av[])
+void	parse_args(int ac, const char *av[], int *daemon, int *port)
 {
+	char	*msg;
+	int		res;
+	
+	if (ac != 2 && ac != 3)
+	{
+		asprintf(&msg, "usage %s: [port] [-D]\n", av[0]);
+		die(msg);
+	}
+	if ((*port = atoi(av[1])) < 0)
+		die("Port is incorrect\n");
+	*daemon = (ac == 3) && (strcmp(av[2], "-D") == 0) ? 1 : 0;
+}
+
+int		main(int ac, const char *av[])
+{
+	int					port;
+	int					daemon;
+	
 	struct sockaddr_in	addr;
 	socklen_t			len;
 	int					n_sock;
@@ -27,6 +45,7 @@ int		main(int ac, char *av[])
 	int					nread;
 	char				buf[BUFF_SIZE + 1];
 
+	parse_args(ac, av, &daemon, &port);
 	c_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (c_sock == -1)
 		die("Issue with socket()\n");
