@@ -6,7 +6,7 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 20:45:55 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/02 20:51:25 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/02 21:20:02 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,8 @@ void	parse_args(int ac, const char *av[], int *daemon, int *port)
 	*daemon = (ac == 3) && (strcmp(av[2], "-D") == 0) ? 1 : 0;
 }
 
-int		main(int ac, const char *av[])
+int		start_server(int port)
 {
-	int					port;
-	int					daemon;
-	
 	struct sockaddr_in	addr;
 	socklen_t			len;
 	int					n_sock;
@@ -45,13 +42,12 @@ int		main(int ac, const char *av[])
 	int					nread;
 	char				buf[BUFF_SIZE + 1];
 
-	parse_args(ac, av, &daemon, &port);
 	c_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (c_sock == -1)
 		die("Issue with socket()\n");
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
-	addr.sin_port = htons(atoi(av[1]));
+	addr.sin_port = htons(port);
 	if (bind(c_sock, (struct sockaddr *)&addr, sizeof(addr)) != 0)
 		die("bind() error\n");
 	while (1)
@@ -63,7 +59,7 @@ int		main(int ac, const char *av[])
 		while ((nread = recv(n_sock, buf, BUFF_SIZE, 0)) > 0)
 		{
 			buf[nread] = '\0';
-			if (strncmp(buf, KEY_WORD, 4) == 0)
+			if (strcmp(buf, KEY_WORD) == 0)
 				write(n_sock, PONG_PONG, 9);
 			else
 				write(n_sock, "\0", 1);
@@ -71,5 +67,14 @@ int		main(int ac, const char *av[])
 		close(n_sock);
 	}
 	close(c_sock);
+}
+
+int		main(int ac, const char *av[])
+{
+	int					port;
+	int					daemon;
+	
+	parse_args(ac, av, &daemon, &port);
+	start_server(port);
 	return (0);
 }
