@@ -6,13 +6,13 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 20:45:55 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/02 21:33:14 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/02 21:47:59 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-void	info(char *msg)
+void	die(char *msg, FILE *fd)
 {
 	puts(msg);
 }
@@ -89,8 +89,7 @@ int		main(int ac, const char *av[])
 			die("fork() fail\n");
 		else if (pid > 0)
 		{
-			asprintf(&msg, "child's pid = %d\n", pid);
-			info(msg);
+			printf("child's pid = %d\n", pid);
 			exit(0);
 		}
 		else
