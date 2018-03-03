@@ -106,16 +106,19 @@ int		main(int ac, const char *av[])
 		}
 		else
 		{
+			umask(0);
 			if (setsid() < 0)
 			 	exit(1);
 			chdir("/");
+			if ((fd = fopen(LOG_PATH, "w+")))
+				printf("See logs in %s\n", LOG_PATH);
+			else
+				printf("Error creating log file at %s\n", LOG_PATH);
 			close(STDIN_FILENO);
 			close(STDOUT_FILENO);
 			close(STDERR_FILENO);
-			fd = fopen(LOG_PATH, "w+");
-			printf("See logs in %s\n", LOG_PATH);
 		}
 	}
-	start_server(port, NULL);
+	start_server(port, fd);
 	return (0);
 }
