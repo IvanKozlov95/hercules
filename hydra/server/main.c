@@ -6,11 +6,16 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 20:45:55 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/02 21:20:02 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/02 21:33:14 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
+
+void	info(char *msg)
+{
+	puts(msg);
+}
 
 void	die(char *msg)
 {
@@ -33,7 +38,7 @@ void	parse_args(int ac, const char *av[], int *daemon, int *port)
 	*daemon = (ac == 3) && (strcmp(av[2], "-D") == 0) ? 1 : 0;
 }
 
-int		start_server(int port)
+int		start_server(int port, int out_fd)
 {
 	struct sockaddr_in	addr;
 	socklen_t			len;
@@ -73,8 +78,33 @@ int		main(int ac, const char *av[])
 {
 	int					port;
 	int					daemon;
+	int					pid;
+	char				*msg;
 	
 	parse_args(ac, av, &daemon, &port);
-	start_server(port);
+	if (daemon)
+	{
+		pid = fork();
+		if (pid < 0)
+			die("fork() fail\n");
+		else if (pid > 0)
+		{
+			asprintf(&msg, "child's pid = %d\n", pid);
+			info(msg);
+			exit(0);
+		}
+		else
+		{
+			if (setsid() < 0)
+			 	exit(1);
+			chdir("/");
+			close(STDIN_FILENO);
+			close(STDOUT_FILENO);
+			close(STDERR_FILENO);
+			// todo: set up log
+			start_server(port, 1);
+		}
+	}
+	start_server(port, 1);
 	return (0);
 }
