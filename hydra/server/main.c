@@ -64,8 +64,10 @@ void	start_server(int port, FILE *out_fd)
 		die("bind() error", out_fd);
 	if (listen(con_sock , 10) < 0)
 		die("listen() error", out_fd);
+	while ((client = accept(con_sock , (struct sockaddr *)&addr, &len)))
 	{
 		// ft_log("accept() error", out_fd);
+		ft_log("[INFO]: client has connected", out_fd);
 		while ((nread = recv(client , buf, BUFF_SIZE, 0)) > 0)
 		{
 			buf[nread] = '\0';
