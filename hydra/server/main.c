@@ -6,7 +6,7 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 20:45:55 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/02 22:01:01 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/03 14:20:02 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ int		main(int ac, const char *av[])
 	int					port;
 	int					daemon;
 	int					pid;
-	char				*msg;
 	FILE				*fd;
 	
 	fd = NULL;
