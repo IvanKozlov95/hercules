@@ -14,17 +14,19 @@
 
 void	die(char *msg, FILE *fd)
 {
-	if (fd)
-		fputs(msg, fd);
-	puts(msg);
+	fd ? fputs(msg, fd) : puts(msg);
 	exit(1);
 }
 
 void	ft_log(char *msg, FILE *fd)
 {
 	if (fd)
-		fputs(msg, fd);
-	puts(msg);
+	{
+		fprintf(fd, "%s\n", msg);
+		fflush(fd);
+	}
+	else
+		printf("%s\n", msg);
 }
 
 void	parse_args(int ac, const char *av[], int *daemon, int *port)
