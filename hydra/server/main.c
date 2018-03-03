@@ -6,7 +6,7 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 20:45:55 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/02 21:47:59 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/02 22:01:01 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,40 +42,43 @@ void	parse_args(int ac, const char *av[], int *daemon, int *port)
 	*daemon = (ac == 3) && (strcmp(av[2], "-D") == 0) ? 1 : 0;
 }
 
-int		start_server(int port, FILE *out_fd)
+void	start_server(int port, FILE *out_fd)
 {
 	struct sockaddr_in	addr;
 	socklen_t			len;
-	int					n_sock;
-	int					c_sock;
+	int					client;
+	int					con_sock;
 	int					nread;
 	char				buf[BUFF_SIZE + 1];
+	char				*msg;
 
-	c_sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (c_sock == -1)
+	con_sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (con_sock == -1)
 		die("Issue with socket()\n", out_fd);
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
 	addr.sin_port = htons(port);
-	if (bind(c_sock, (struct sockaddr *)&addr, sizeof(addr)) != 0)
+	if (bind(con_sock , (struct sockaddr *)&addr, sizeof(addr)) != 0)
 		die("bind() error\n", out_fd);
-	while (1)
+	if (listen(con_sock , 10) < 0)
+		die("listen() error\n", out_fd);
+	while (((client = accept(con_sock , (struct sockaddr *)&addr, &len)) < 0))
 	{
-		if (listen(c_sock, 10) < 0)
-			die("listen() error\n", out_fd);
-		if ((n_sock = accept(c_sock, (struct sockaddr *)&addr, &len)) < 0)
-			die("accept() error\n", out_fd);
-		while ((nread = recv(n_sock, buf, BUFF_SIZE, 0)) > 0)
+		ft_log("[INFO]: client has connected,\n", out_fd);
+		while ((nread = recv(client , buf, BUFF_SIZE, 0)) > 0)
 		{
 			buf[nread] = '\0';
+			asprintf(&msg, "Message from client #%d: %s\n", client, buf);
+			ft_log(msg, out_fd);
 			if (strcmp(buf, KEY_WORD) == 0)
-				write(n_sock, PONG_PONG, 9);
+				write(client, PONG_PONG, 9);
 			else
-				write(n_sock, "\0", 1);
+				write(client, "\0", 1);
 		}
-		close(n_sock);
+		close(client);
+		ft_log("[INFO]: client has disconnected\n", out_fd);
 	}
-	close(c_sock);
+	close(con_sock);
 }
 
 int		main(int ac, const char *av[])
@@ -107,6 +110,7 @@ int		main(int ac, const char *av[])
 			close(STDOUT_FILENO);
 			close(STDERR_FILENO);
 			fd = fopen(LOG_PATH, "w+");
+			printf("See logs in %s\n", LOG_PATH);
 		}
 	}
 	start_server(port, NULL);
