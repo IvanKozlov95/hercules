@@ -6,7 +6,7 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 20:45:55 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/01 22:41:52 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/02 20:51:25 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		main(int ac, char *av[])
 
 	c_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (c_sock == -1)
-		die("Issue with socket()");
+		die("Issue with socket()\n");
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
 	addr.sin_port = htons(atoi(av[1]));
