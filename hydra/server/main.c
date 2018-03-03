@@ -6,26 +6,26 @@
 /*   By: ikozlov <ikozlov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 20:45:55 by ikozlov           #+#    #+#             */
-/*   Updated: 2018/03/03 14:55:44 by ikozlov          ###   ########.fr       */
+/*   Updated: 2018/03/03 15:03:40 by ikozlov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
 
-FILE	*fd;
+FILE	*g_fd;
 
 void	die(char *msg)
 {
-	fd ? fputs(msg, fd) : puts(msg);
+	g_fd ? fputs(msg, g_fd) : puts(msg);
 	exit(1);
 }
 
 void	ft_log(char *msg)
 {
-	if (fd)
+	if (g_fd)
 	{
-		fprintf(fd, "%s\n", msg);
-		fflush(fd);
+		fprintf(g_fd, "%s\n", msg);
+		fflush(g_fd);
 	}
 	else
 		printf("%s\n", msg);
@@ -35,7 +35,7 @@ void	parse_args(int ac, const char *av[], int *daemon, int *port)
 {
 	char	*msg;
 	int		res;
-	
+
 	if (ac != 2 && ac != 3)
 	{
 		asprintf(&msg, "usage %s: [port] [-D]", av[0]);
@@ -49,13 +49,13 @@ void	parse_args(int ac, const char *av[], int *daemon, int *port)
 void	*client_routine(void *data)
 {
 	int		client;
-	FILE	*out_fd;
 	int		nread;
 	char	buf[BUFF_SIZE + 1];
 	char	*msg;
 
 	client = *(int *)data;
-	while ((nread = recv(client , buf, BUFF_SIZE, 0)) > 0)
+	ft_log("[INFO]: client has connected");
+	while ((nread = recv(client, buf, BUFF_SIZE, 0)) > 0)
 	{
 		buf[nread] = '\0';
 		asprintf(&msg, "Message from client #%d: %s", client, buf);
@@ -71,7 +71,7 @@ void	*client_routine(void *data)
 	return (0);
 }
 
-void	start_server(int port, FILE *out_fd)
+void	start_server(int port, FILE *out_g_fd)
 {
 	struct sockaddr_in	addr;
 	socklen_t			len;
@@ -86,13 +86,12 @@ void	start_server(int port, FILE *out_fd)
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
 	addr.sin_port = htons(port);
-	if (bind(con_sock , (struct sockaddr *)&addr, sizeof(addr)) != 0)
+	if (bind(con_sock, (struct sockaddr *)&addr, sizeof(addr)) != 0)
 		die("bind() error");
-	if (listen(con_sock , 10) < 0)
+	if (listen(con_sock, 10) < 0)
 		die("listen() error");
-	while ((client = accept(con_sock , (struct sockaddr *)&addr, &len)))
+	while ((client = accept(con_sock, (struct sockaddr *)&addr, &len)))
 	{
-		ft_log("[INFO]: client has connected");
 		data = malloc(1);
 		data = (void *)&client;
 		if (pthread_create(&thread, NULL, client_routine, data) < 0)
@@ -106,8 +105,8 @@ int		main(int ac, const char *av[])
 	int					port;
 	int					daemon;
 	int					pid;
-	
-	fd = NULL;
+
+	g_fd = NULL;
 	parse_args(ac, av, &daemon, &port);
 	if (daemon)
 	{
@@ -123,9 +122,9 @@ int		main(int ac, const char *av[])
 		{
 			umask(0);
 			if (setsid() < 0)
-			 	exit(1);
+				exit(1);
 			chdir("/");
-			if ((fd = fopen(LOG_PATH, "w+")))
+			if ((g_fd = fopen(LOG_PATH, "w+")))
 				printf("See logs in %s\n", LOG_PATH);
 			else
 				printf("Error creating log file at %s\n", LOG_PATH);
@@ -134,6 +133,6 @@ int		main(int ac, const char *av[])
 			close(STDERR_FILENO);
 		}
 	}
-	start_server(port, fd);
+	start_server(port, g_fd);
 	return (0);
 }
