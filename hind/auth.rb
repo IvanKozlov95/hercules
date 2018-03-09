@@ -8,3 +8,7 @@ client = OAuth2::Client.new(UID, SECRET, site: "https://api.intra.42.fr")
 # Get an access token
 token = client.client_credentials.get_token
 print "#{token}\n"
+# info = token.get("/v2/cursus/42/users").parsed
+# print "#{info}\n"
+response = token.get("/v2/users/ikozlov")
+print "#{response.parsed["location"]}\n"
