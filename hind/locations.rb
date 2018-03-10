@@ -6,7 +6,7 @@
 #    By: ivankozlov <ivankozlov@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/09 16:12:03 by ivankozlov        #+#    #+#              #
-#    Updated: 2018/03/09 16:39:57 by ivankozlov       ###   ########.fr        #
+#    Updated: 2018/03/09 16:50:40 by ivankozlov       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ end
 
 users.each do |login, status|
 	response = token.get("/v2/users/#{login}")
-	if response.status == 200
+	if response.status == 200 && response.parsed["location"]
 		users[login] = response.parsed["location"]
 	end
 	rescue OAuth2::Error => e
