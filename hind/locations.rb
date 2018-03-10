@@ -13,7 +13,7 @@ ARGV.each do |a|
 		end
 	end
 	rescue Errno::ENOENT, TypeError
-		puts "File {a} not found\n"
+		puts "File #{a} not found\n"
 end
 
 users.each do |login, status|
