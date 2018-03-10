@@ -6,15 +6,16 @@
 #    By: ivankozlov <ivankozlov@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/09 16:12:03 by ivankozlov        #+#    #+#              #
-#    Updated: 2018/03/09 16:12:05 by ivankozlov       ###   ########.fr        #
+#    Updated: 2018/03/09 16:39:57 by ivankozlov       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 require "oauth2"
+require "json"
 
-UID = "2b9a0883f878ec13e7556f83833d69d448e7868d5e53812b737d0989710d6149"
-SECRET = "d2fe665865cc3805ef59b8e54cd6ee88c255a658aca3733340d8a1c9d88923a8"
-client = OAuth2::Client.new(UID, SECRET, site: "https://api.intra.42.fr")
+file = File.read('settings.json');
+json = JSON.parse(file)
+client = OAuth2::Client.new(json["uid"], json["secret"] , site: json["api_url"])
 token = client.client_credentials.get_token
 
 users = {}
