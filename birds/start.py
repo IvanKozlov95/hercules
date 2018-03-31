@@ -11,6 +11,9 @@ name = sys.argv[1]
 lang = sys.argv[2].split(' ')[0].title()
 path =os.getcwd() + '/' + name
 gitignore = path + '/.gitignore'
+languages = {
+	'C': C
+}
 
 def download_gitignore():
 	link = 'https://raw.githubusercontent.com/github/gitignore/master/' + lang + '.gitignore'
@@ -36,9 +39,7 @@ def create_project():
 	mkdir()
 	os.chdir(path)
 	download_gitignore()
-	nolang = lambda: msg('red', 'You\'r language isn\'t in my database')
-	{
-		'C': C(path, name)
-	}.get(lang, nolang())
+	nolang = lambda: msg('red', 'Your language isn\'t in my database')
+	languages[lang](path, name) if lang in languages.keys() else nolang()
 
 create_project()
