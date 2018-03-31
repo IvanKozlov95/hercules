@@ -14,8 +14,7 @@ gitignore = path + '/.gitignore'
 
 def download_gitignore():
 	link = 'https://raw.githubusercontent.com/github/gitignore/master/' + lang + '.gitignore'
-	print(link)
-	os.system('curl ' + link + ' --output .gitignore')
+	os.system('curl -s ' + link + ' --output .gitignore')
 	file = open(gitignore)
 	if '404' in file.read():
 		os.remove(gitignore)
@@ -24,25 +23,22 @@ def download_gitignore():
 def mkdir():
 	if not os.path.exists(path):
 		os.makedirs(name)
-		msg('green', 'Created directory ' + path + '\n')
+		msg('green', 'Created directory ' + path)
 	else:
 		msg('yellow', 'Directory ' + path + ' already exists.')
-		yn = input('Continue? (y/n)?\n')
-		while (yn != 'y'):
-			if yn in 'nN':
-				msg('red', 'Aborting...')
-				return
-			else:
-				msg('white', 'Please answer yY or nN.')
-			yn = input('Continue? (y/n)?\n')
+		onno = lambda: (
+			msg('red', 'Aborting...'),
+			sys.exit()
+		)
+		ask_until_yn('Continue? (y/n)?\n', lambda: os.system('git init'), onno)
 
 def create_project():
 	mkdir()
 	os.chdir(path)
 	download_gitignore()
+	nolang = lambda: msg('red', 'You\'r language isn\'t in my database')
 	{
 		'C': C(path, name)
-	}[lang]
-	pass
+	}.get(lang, nolang())
 
 create_project()
