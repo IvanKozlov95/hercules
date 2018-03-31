@@ -12,12 +12,26 @@ if len(sys.argv) < 3:
 name = sys.argv[1]
 lang = sys.argv[2].split(' ')[0].title()
 path = os.getcwd()
-if len(sys.argv) is 5:
+if len(sys.argv) >= 4:
 	if sys.argv[3] == '-p':
+		if len(sys.argv) is not 5:
+			print("specify the path")
+			sys.exit()
 		path = sys.argv[4]
+		if len(path) >= 2 and  path[0] is '.' and path[1] is '/':
+			path = os.getcwd() + path[1:]
+		if len(path) == 2 and path[0] is not '.' and path[1] is not '/':
+			print("use relative paths like ./foder or ~/folder")
+			sys.exit()
+		elif path[0] is not '/' and path[0] is not '.':
+			print("use relative paths like ./ or ~/folder")
+			sys.exit()	
+		elif len(path) is 1 and path[0] is '/':
+			print("don't create a project in root. This is bad.")
+			sys.exit()
+	else:
+		print("unknown command " + sys.argv[3])
 path = path if path[-1] == '/' else path + '/'
-print(name)
-print(path)
 gitignore = path + name + '/.gitignore'
 languages = {
 	'C': C
@@ -36,7 +50,7 @@ def mkdir():
 		os.makedirs(path + name)
 		msg('green', 'Created directory ' + path)
 	else:
-		msg('yellow', 'Directory ' + path + ' already exists.')
+		msg('yellow', 'Directory ' + path + name + ' already exists.')
 		onno = lambda: (
 			msg('red', 'Aborting...'),
 			sys.exit()
