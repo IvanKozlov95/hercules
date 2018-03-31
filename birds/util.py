@@ -16,9 +16,9 @@ def ask_until_yn(question, yes, no):
 	yn = input(question)
 	while (yn != 'y'):
 		if yn in 'nN':
-			no()
+			no() if no is not None else None
 			return
 		else:
 			msg('white', 'Please answer yY or nN.')
 		yn = input(question)
-	yes()
+	yes() if yes is not None else None
