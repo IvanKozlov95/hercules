@@ -3,14 +3,20 @@ import sys
 from util import *
 from languages.C import C
 
-if len(sys.argv) < 2:
-	print("usage: python start.py [project name] [project language]")
+if len(sys.argv) < 3:
+	print("usage: python start.py [project name] [project language] [-p path]")
 	sys.exit()
 
 name = sys.argv[1]
 lang = sys.argv[2].split(' ')[0].title()
-path =os.getcwd() + '/' + name
-gitignore = path + '/.gitignore'
+path = os.getcwd()
+if len(sys.argv) is 5:
+	if sys.argv[3] == '-p':
+		path = sys.argv[4]
+path = path if path[-1] == '/' else path + '/'
+print(name)
+print(path)
+gitignore = path + name + '/.gitignore'
 languages = {
 	'C': C
 }
@@ -24,8 +30,8 @@ def download_gitignore():
 		msg('red', 'Couldn\'t find gitignore for your language, sorry.')
 
 def mkdir():
-	if not os.path.exists(path):
-		os.makedirs(name)
+	if not os.path.exists(path + name):
+		os.makedirs(path + name)
 		msg('green', 'Created directory ' + path)
 	else:
 		msg('yellow', 'Directory ' + path + ' already exists.')
@@ -37,9 +43,9 @@ def mkdir():
 
 def create_project():
 	mkdir()
-	os.chdir(path)
+	os.chdir(path + name)
 	download_gitignore()
 	nolang = lambda: msg('red', 'Your language isn\'t in my database')
-	languages[lang](path, name) if lang in languages.keys() else nolang()
+	languages[lang](path + name, name) if lang in languages.keys() else nolang()
 
 create_project()
