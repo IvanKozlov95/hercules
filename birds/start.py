@@ -4,6 +4,7 @@ import os
 import sys
 from util import *
 from languages.C import C
+from languages.Brainfuck import Brainfuck
 
 if len(sys.argv) < 3:
 	print("usage: python start.py [project name] [project language] [-p path]")
@@ -34,7 +35,8 @@ if len(sys.argv) >= 4:
 path = path if path[-1] == '/' else path + '/'
 gitignore = path + name + '/.gitignore'
 languages = {
-	'C': C
+	'C': C,
+	'Brainfuck': Brainfuck
 }
 
 def download_gitignore():
