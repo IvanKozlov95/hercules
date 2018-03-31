@@ -47,18 +47,18 @@ INCLUDES = -I $(INC_DIR) {inc_lft}
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	{make_lft}@$(CC) $(OBJ) -o $(NAME) {flag_lft}
+	{make_lft}\t@$(CC) $(OBJ) -o $(NAME) {flag_lft}
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INC_DIR)
 	@mkdir -p $(OBJ_DIR)
 	@$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	{clean_lft}@rm -rf $(OBJ_DIR)
+	{clean_lft}\t@rm -rf $(OBJ_DIR)
 	@echo "[INFO] Objects removed."
 
 fclean: clean
-	{fclean_lft}@rm $(NAME)
+	{fclean_lft}\t@rm $(NAME)
 	@echo "[INFO] Lem-in executable deleted"
 
 re: fclean all
