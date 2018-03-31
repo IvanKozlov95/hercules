@@ -1,0 +1,6 @@
+[submodule "birds/asd/libft"]
+	path = birds/asd/libft
+	url = https://github.com/IvanKozlov95/libft
+[submodule "birds/project/libft"]
+	path = birds/project/libft
+	url = https://github.com/IvanKozlov95/libft
