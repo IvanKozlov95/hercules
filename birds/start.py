@@ -1,3 +1,5 @@
+#!/nfs/2017/i/ikozlov/.brew/bin/python3
+
 import os
 import sys
 from util import *
